@@ -4,7 +4,7 @@ import { SecurityGroup, Vpc } from "aws-cdk-lib/aws-ec2";
 import { Key } from "aws-cdk-lib/aws-kms";
 import { Bucket } from "aws-cdk-lib/aws-s3";
 import { LogGroup, RetentionDays } from "aws-cdk-lib/aws-logs";
-import { CfnDomain, CfnPipeline, CfnUserProfile } from "aws-cdk-lib/aws-sagemaker";
+import { CfnDomain, CfnUserProfile } from "aws-cdk-lib/aws-sagemaker";
 import { ManagedPolicy, PolicyStatement, Role, ServicePrincipal } from "aws-cdk-lib/aws-iam";
 import { BucketDeployment, Source } from "aws-cdk-lib/aws-s3-deployment";
 import { Code, Function, Runtime } from "aws-cdk-lib/aws-lambda";
@@ -148,7 +148,7 @@ export class SagemakerPipelineStack extends Stack {
     });
 
     // SageMaker Pipeline definition (Processing + Training + Deploy minimal)
-    const pipelineName = `${ props.projectPrefix }-tabular-classification`;
+    const pipelineName = `ml-pipeline-example-classification`;
     const roleArn = pipelineRole.roleArn;
     const bucketName = props.dataBucket.bucketName;
 
@@ -302,14 +302,50 @@ export class SagemakerPipelineStack extends Stack {
       ],
     };
 
-    const pipeline = new CfnPipeline(this, `${ props.projectPrefix }-pipeline`, {
-      pipelineName,
-      roleArn,
-      // Use PascalCase key to satisfy CFN schema explicitly
-      pipelineDefinition: {
-        // CloudFormation expects 'PipelineDefinitionBody' (string) or 'PipelineDefinitionS3Location'
+    // Custom Resource to manage the SageMaker Pipeline via SDK for better control
+    const pipelineFn = new Function(this, `${ props.projectPrefix }-pipeline-manager-fn`, {
+      functionName: `${ props.projectPrefix }-pipeline-manager`,
+      runtime: Runtime.PYTHON_3_12,
+      handler: 'index.on_event',
+      code: Code.fromAsset('resources/lambda/pipeline_manager'),
+      timeout: Duration.minutes(5),
+      memorySize: 512,
+      vpc: props.vpc,
+      securityGroups: [ props.securityGroup ],
+      vpcSubnets: { subnets: props.vpc.isolatedSubnets },
+    });
+    // IAM for pipeline management
+    pipelineFn.addToRolePolicy(new PolicyStatement({
+      actions: [
+        'sagemaker:CreatePipeline',
+        'sagemaker:UpdatePipeline',
+        'sagemaker:DeletePipeline',
+        'sagemaker:DescribePipeline',
+        'sagemaker:GetPipelineDefinition'
+      ],
+      resources: [ `arn:aws:sagemaker:${ Stack.of(this).region }:${ Stack.of(this).account }:pipeline/${ pipelineName }` ],
+    }));
+    pipelineFn.addToRolePolicy(new PolicyStatement({
+      actions: [ 'iam:PassRole' ],
+      resources: [ pipelineRole.roleArn, sagemakerJobRole.roleArn ],
+    }));
+
+    const pipelineProvider = new Provider(this, `${ props.projectPrefix }-pipeline-provider`, {
+      onEventHandler: pipelineFn,
+      logGroup: new LogGroup(this, `${ props.projectPrefix }-pipeline-logs`, {
+        retention: RetentionDays.ONE_WEEK,
+        removalPolicy: RemovalPolicy.DESTROY,
+      }),
+    });
+
+    new CustomResource(this, `${ props.projectPrefix }-pipeline-resource`, {
+      serviceToken: pipelineProvider.serviceToken,
+      properties: {
+        PipelineName: pipelineName,
+        RoleArn: roleArn,
+        // Pass definition as string to avoid CFN schema pitfalls
         PipelineDefinitionBody: JSON.stringify(pipelineDefinition),
-      } as any,
+      },
     });
 
     // EventBridge rule for pipeline failure -> SNS
@@ -331,7 +367,7 @@ export class SagemakerPipelineStack extends Stack {
 
     new CfnOutput(this, 'StudioDomainId', { value: this.studioDomain.attrDomainId });
     new CfnOutput(this, 'UserProfileName', { value: this.userProfile.userProfileName });
-    new CfnOutput(this, 'PipelineName', { value: pipeline.pipelineName! });
+    new CfnOutput(this, 'PipelineName', { value: pipelineName });
     new CfnOutput(this, 'AlertsTopicArn', { value: topic.topicArn });
   }
 }
