@@ -174,14 +174,12 @@ export class SagemakerPipelineStack extends Stack {
             },
             AppSpecification: {
               ImageUri: this.PRE_PROC_IMAGE,
-              ContainerArguments: [],
               ContainerEntrypoint: [ 'python', '/opt/ml/processing/input/code/preprocessing.py' ],
             },
             RoleArn: sagemakerJobRole.roleArn,
             ProcessingInputs: [
               {
                 InputName: 'code',
-                AppManaged: false,
                 S3Input: {
                   S3Uri: `s3://${ bucketName }/${ codePrefix }`,
                   LocalPath: '/opt/ml/processing/input/code',
@@ -235,7 +233,7 @@ export class SagemakerPipelineStack extends Stack {
                 DataSource: {
                   S3DataSource: {
                     S3DataType: 'S3Prefix',
-                    S3Uri: { 'Concat': [ { 'Get': 'Parameters.ProcessedPrefix' }, 'train/' ] },
+                    S3Uri: `s3://${ bucketName }/processed/train/`,
                     S3DataDistributionType: 'FullyReplicated',
                   },
                 },
@@ -246,7 +244,7 @@ export class SagemakerPipelineStack extends Stack {
                 DataSource: {
                   S3DataSource: {
                     S3DataType: 'S3Prefix',
-                    S3Uri: { 'Concat': [ { 'Get': 'Parameters.ProcessedPrefix' }, 'test/' ] },
+                    S3Uri: `s3://${ bucketName }/processed/test/`,
                     S3DataDistributionType: 'FullyReplicated',
                   },
                 },
@@ -342,9 +340,19 @@ export class SagemakerPipelineStack extends Stack {
       serviceToken: pipelineProvider.serviceToken,
       properties: {
         PipelineName: pipelineName,
-        RoleArn: roleArn,
-        // Pass definition as string to avoid CFN schema pitfalls
-        PipelineDefinitionBody: JSON.stringify(pipelineDefinition),
+        PipelineRoleArn: roleArn,
+        JobRoleArn: sagemakerJobRole.roleArn,
+        BucketName: bucketName,
+        RawPrefix: 'raw/',
+        ProcessedPrefix: 'processed/',
+        ModelPrefix: 'models/',
+        CodePrefix: codePrefix,
+        ProcessingImageUri: this.PRE_PROC_IMAGE,
+        TrainingImageUri: this.TRAINING_IMAGE,
+        InferenceImageUri: this.INFERENCE_IMAGE,
+        InstanceType: 'ml.m5.large',
+        EndpointName: `${ props.projectPrefix }-endpoint`,
+        GeneratorVersion: 'v1',
       },
     });
 
