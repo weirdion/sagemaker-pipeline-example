@@ -7,7 +7,6 @@ import { LogGroup, RetentionDays } from "aws-cdk-lib/aws-logs";
 import { CfnDomain, CfnPipeline, CfnUserProfile } from "aws-cdk-lib/aws-sagemaker";
 import { ManagedPolicy, PolicyStatement, Role, ServicePrincipal } from "aws-cdk-lib/aws-iam";
 import { BucketDeployment, Source } from "aws-cdk-lib/aws-s3-deployment";
-import * as path from "node:path";
 import { Code, Function, Runtime } from "aws-cdk-lib/aws-lambda";
 import { Provider } from "aws-cdk-lib/custom-resources";
 import { SnsTopic } from "aws-cdk-lib/aws-events-targets";
@@ -110,7 +109,7 @@ export class SagemakerPipelineStack extends Stack {
     new BucketDeployment(this, `${ props.projectPrefix }-code-deploy`, {
       destinationBucket: props.dataBucket,
       destinationKeyPrefix: codePrefix,
-      sources: [ Source.asset(path.join(__dirname, '..', 'resources', 'scripts')) ],
+      sources: [ Source.asset('resources/scripts') ],
       prune: false,
     });
 
@@ -119,7 +118,7 @@ export class SagemakerPipelineStack extends Stack {
       functionName: `${ props.projectPrefix }-seed-data`,
       runtime: Runtime.PYTHON_3_12,
       handler: 'index.on_event',
-      code: Code.fromAsset(path.join(__dirname, '..', 'resources', 'lambda', 'data_seed')),
+      code: Code.fromAsset('resources/lambda/data_seed'),
       timeout: Duration.seconds(60),
       memorySize: 256,
       environment: {
@@ -306,7 +305,11 @@ export class SagemakerPipelineStack extends Stack {
     const pipeline = new CfnPipeline(this, `${ props.projectPrefix }-pipeline`, {
       pipelineName,
       roleArn,
-      pipelineDefinition: JSON.stringify(pipelineDefinition),
+      // Use PascalCase key to satisfy CFN schema explicitly
+      pipelineDefinition: {
+        // CloudFormation expects 'PipelineDefinitionBody' (string) or 'PipelineDefinitionS3Location'
+        PipelineDefinitionBody: JSON.stringify(pipelineDefinition),
+      } as any,
     });
 
     // EventBridge rule for pipeline failure -> SNS
