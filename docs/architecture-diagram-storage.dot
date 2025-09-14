@@ -1,0 +1,93 @@
+digraph "Diagram" {
+  splines = "ortho";
+  pad = 1;
+  nodesep = 0.6;
+  ranksep = 0.75;
+  fontname = "Sans-Serif";
+  fontsize = 15;
+  dpi = 200;
+  rankdir = "BT";
+  compound = true;
+  fontcolor = "#222222";
+  edge [
+    color = "#D5871488";
+    penwidth = 2;
+    arrowhead = "dot";
+    arrowtail = "dot";
+  ];
+  node [
+    shape = "box";
+    style = "rounded";
+    fixedsize = true;
+    width = 1.7;
+    height = 1.7;
+    labelloc = "c";
+    imagescale = true;
+    fontname = "Sans-Serif";
+    fontsize = 8;
+    margin = 8;
+  ];
+  subgraph "StorageStack" {
+    subgraph "cluster-SubGraph.StorageStack" {
+      graph [
+        label = "StorageStack";
+        labelloc = "b";
+        labeljust = "l";
+        margin = 10;
+        fontsize = 16;
+        penwidth = 2;
+        pencolor = "#888888";
+        style = "filled,rounded";
+        fillcolor = "#e4e4e4";
+      ];
+      "StorageStack/ml-pipeline-data-kms" [
+        label = " ml-pipeline-data-kms";
+        fontsize = 12;
+        image = "/Users/ankitpatterson/workspace/sagemaker-pipeline-example/node_modules/cdk-dia/icons/aws/Service/Arch_Security-Identity-Compliance/64/Arch_AWS-Key-Management-Services_64@5x.png";
+        imagescale = "true";
+        imagepos = "tc";
+        penwidth = 0;
+        shape = "node";
+        fixedsize = "true";
+        labelloc = "b";
+        width = 2;
+        height = 2.266;
+      ];
+      "StorageStack/ml-pipeline-logs-bucket" [
+        label = " ml pipeline logs\nbucket";
+        fontsize = 12;
+        image = "/Users/ankitpatterson/workspace/sagemaker-pipeline-example/node_modules/cdk-dia/icons/aws/Service/Arch_Storage/64/Arch_Amazon-S3-Standard_64@5x.png";
+        imagescale = "true";
+        imagepos = "tc";
+        penwidth = 0;
+        shape = "node";
+        fixedsize = "true";
+        labelloc = "b";
+        width = 2;
+        height = 2.4819999999999998;
+      ];
+      "StorageStack/ml-pipeline-data-bucket" [
+        label = " ml pipeline data\nbucket";
+        fontsize = 12;
+        image = "/Users/ankitpatterson/workspace/sagemaker-pipeline-example/node_modules/cdk-dia/icons/aws/Service/Arch_Storage/64/Arch_Amazon-S3-Standard_64@5x.png";
+        imagescale = "true";
+        imagepos = "tc";
+        penwidth = 0;
+        shape = "node";
+        fixedsize = "true";
+        labelloc = "b";
+        width = 2;
+        height = 2.4819999999999998;
+      ];
+    }
+  }
+  "StorageStack/ml-pipeline-logs-bucket" -> "StorageStack/ml-pipeline-data-bucket" [
+    dir = "both";
+  ];
+  "StorageStack/ml-pipeline-data-bucket" -> "StorageStack/ml-pipeline-data-kms" [
+    dir = "both";
+  ];
+  "StorageStack/ml-pipeline-data-bucket" -> "StorageStack/ml-pipeline-logs-bucket" [
+    dir = "both";
+  ];
+}

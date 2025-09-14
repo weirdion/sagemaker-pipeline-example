@@ -9,7 +9,11 @@
     "watch": "tsc -w",
     "test": "jest",
     "cdk": "cdk",
-    "visualize": "npx cdk-dia --target architecture-diagram.png"
+    "visualize-combined": "cdk-dia --target docs/architecture-diagram.png",
+    "visualize-network": "cdk-dia --target docs/architecture-diagram-network.png --stacks NetworkStack",
+    "visualize-storage": "cdk-dia --target docs/architecture-diagram-storage.png --stacks StorageStack",
+    "visualize-sagemaker": "cdk-dia --target docs/architecture-diagram-sagemaker.png --stacks SagemakerPipelineStack",
+    "visualize": "npm run visualize-combined && npm run visualize-network && npm run visualize-storage && npm run visualize-sagemaker"
   },
   "devDependencies": {
     "@types/jest": "^29.5.14",

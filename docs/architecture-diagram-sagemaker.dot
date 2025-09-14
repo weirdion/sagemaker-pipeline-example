@@ -1,0 +1,325 @@
+digraph "Diagram" {
+  splines = "ortho";
+  pad = 1;
+  nodesep = 0.6;
+  ranksep = 0.75;
+  fontname = "Sans-Serif";
+  fontsize = 15;
+  dpi = 200;
+  rankdir = "BT";
+  compound = true;
+  fontcolor = "#222222";
+  edge [
+    color = "#D5871488";
+    penwidth = 2;
+    arrowhead = "dot";
+    arrowtail = "dot";
+  ];
+  node [
+    shape = "box";
+    style = "rounded";
+    fixedsize = true;
+    width = 1.7;
+    height = 1.7;
+    labelloc = "c";
+    imagescale = true;
+    fontname = "Sans-Serif";
+    fontsize = 8;
+    margin = 8;
+  ];
+  subgraph "SagemakerPipelineStack" {
+    subgraph "cluster-SubGraph.SagemakerPipelineStack" {
+      graph [
+        label = "SagemakerPipelineStack";
+        labelloc = "b";
+        labeljust = "l";
+        margin = 10;
+        fontsize = 16;
+        penwidth = 2;
+        pencolor = "#888888";
+        style = "filled,rounded";
+        fillcolor = "#e4e4e4";
+      ];
+      "SagemakerPipelineStack/ml-pipeline-studio-exec-role" [
+        label = " ml pipeline studio\nexec role";
+        fontsize = 12;
+        image = "/Users/ankitpatterson/workspace/sagemaker-pipeline-example/node_modules/cdk-dia/icons/aws/Service/Arch_Security-Identity-Compliance/64/Arch_AWS-Identity-and-Access-Management_64@5x.png";
+        imagescale = "true";
+        imagepos = "tc";
+        penwidth = 0;
+        shape = "node";
+        fixedsize = "true";
+        labelloc = "b";
+        width = 1.2;
+        height = 1.682;
+      ];
+      "SagemakerPipelineStack/ml-pipeline-domain" [
+        label = " SageMaker Domain\nml-pipeline-domain";
+        fontsize = 12;
+        image = "/Users/ankitpatterson/workspace/sagemaker-pipeline-example/node_modules/cdk-dia/icons/aws/Resource/Res_Machine-Learning/Res_48_Dark/Res_Amazon-Sagemaker_Model_48_Dark_gen.png";
+        imagescale = "true";
+        imagepos = "tc";
+        penwidth = 0;
+        shape = "node";
+        fixedsize = "true";
+        labelloc = "b";
+        width = 1.2;
+        height = 1.682;
+      ];
+      "SagemakerPipelineStack/ml-pipeline-user-weirdion" [
+        label = " SageMaker\nUserProfile";
+        fontsize = 12;
+        image = "/Users/ankitpatterson/workspace/sagemaker-pipeline-example/node_modules/cdk-dia/icons/aws/Resource/Res_Machine-Learning/Res_48_Dark/Res_Amazon-Sagemaker_Model_48_Dark_gen.png";
+        imagescale = "true";
+        imagepos = "tc";
+        penwidth = 0;
+        shape = "node";
+        fixedsize = "true";
+        labelloc = "b";
+        width = 1.2;
+        height = 1.682;
+      ];
+      "SagemakerPipelineStack/ml-pipeline-sm-job-role" [
+        label = " ml pipeline sm job\nrole";
+        fontsize = 12;
+        image = "/Users/ankitpatterson/workspace/sagemaker-pipeline-example/node_modules/cdk-dia/icons/aws/Service/Arch_Security-Identity-Compliance/64/Arch_AWS-Identity-and-Access-Management_64@5x.png";
+        imagescale = "true";
+        imagepos = "tc";
+        penwidth = 0;
+        shape = "node";
+        fixedsize = "true";
+        labelloc = "b";
+        width = 1.2;
+        height = 1.682;
+      ];
+      "SagemakerPipelineStack/ml-pipeline-pipeline-role" [
+        label = " ml pipeline pipeline\nrole";
+        fontsize = 12;
+        image = "/Users/ankitpatterson/workspace/sagemaker-pipeline-example/node_modules/cdk-dia/icons/aws/Service/Arch_Security-Identity-Compliance/64/Arch_AWS-Identity-and-Access-Management_64@5x.png";
+        imagescale = "true";
+        imagepos = "tc";
+        penwidth = 0;
+        shape = "node";
+        fixedsize = "true";
+        labelloc = "b";
+        width = 1.2;
+        height = 1.682;
+      ];
+      "SagemakerPipelineStack/Custom__CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C" [
+        label = " Custom \nCDKBucketDeployment86";
+        fontsize = 12;
+        image = "/Users/ankitpatterson/workspace/sagemaker-pipeline-example/node_modules/cdk-dia/icons/aws/Service/Arch_Compute/64/Arch_AWS-Lambda_64@5x.png";
+        imagescale = "true";
+        imagepos = "tc";
+        penwidth = 0;
+        shape = "node";
+        fixedsize = "true";
+        labelloc = "b";
+        width = 2;
+        height = 2.4819999999999998;
+      ];
+      "SagemakerPipelineStack/ml-pipeline-seed-data-fn" [
+        label = " ml pipeline seed\ndata fn";
+        fontsize = 12;
+        image = "/Users/ankitpatterson/workspace/sagemaker-pipeline-example/node_modules/cdk-dia/icons/aws/Service/Arch_Compute/64/Arch_AWS-Lambda_64@5x.png";
+        imagescale = "true";
+        imagepos = "tc";
+        penwidth = 0;
+        shape = "node";
+        fixedsize = "true";
+        labelloc = "b";
+        width = 2;
+        height = 2.4819999999999998;
+      ];
+      "SagemakerPipelineStack/ml-pipeline-seed-logs" [
+        label = "\nml-pipeline-seed-logs";
+        fontsize = 12;
+        image = "/Users/ankitpatterson/workspace/sagemaker-pipeline-example/node_modules/cdk-dia/icons/aws/Resource/Res_Management-Governance/Res_48_Dark/Res_Amazon-Cloudwatch_Logs_48_Dark_gen.png";
+        imagescale = "true";
+        imagepos = "tc";
+        penwidth = 0;
+        shape = "node";
+        fixedsize = "true";
+        labelloc = "b";
+        width = 2;
+        height = 2.4819999999999998;
+      ];
+      "SagemakerPipelineStack/ml-pipeline-seed-resource" [
+        label = " CloudFormation\nCustomResource";
+        fontsize = 12;
+        image = "/Users/ankitpatterson/workspace/sagemaker-pipeline-example/node_modules/cdk-dia/icons/aws/Service/Arch_Management-Governance/64/Arch_AWS-CloudFormation_64@5x.png";
+        imagescale = "true";
+        imagepos = "tc";
+        penwidth = 0;
+        shape = "node";
+        fixedsize = "true";
+        labelloc = "b";
+        width = 1.2;
+        height = 1.682;
+      ];
+      "SagemakerPipelineStack/ml-pipeline-pipeline-manager-fn" [
+        label = " ml pipeline pipeline\nmanager fn";
+        fontsize = 12;
+        image = "/Users/ankitpatterson/workspace/sagemaker-pipeline-example/node_modules/cdk-dia/icons/aws/Service/Arch_Compute/64/Arch_AWS-Lambda_64@5x.png";
+        imagescale = "true";
+        imagepos = "tc";
+        penwidth = 0;
+        shape = "node";
+        fixedsize = "true";
+        labelloc = "b";
+        width = 2;
+        height = 2.4819999999999998;
+      ];
+      "SagemakerPipelineStack/ml-pipeline-pipeline-logs" [
+        label = " ml pipeline pipeline\nlogs";
+        fontsize = 12;
+        image = "/Users/ankitpatterson/workspace/sagemaker-pipeline-example/node_modules/cdk-dia/icons/aws/Resource/Res_Management-Governance/Res_48_Dark/Res_Amazon-Cloudwatch_Logs_48_Dark_gen.png";
+        imagescale = "true";
+        imagepos = "tc";
+        penwidth = 0;
+        shape = "node";
+        fixedsize = "true";
+        labelloc = "b";
+        width = 2;
+        height = 2.4819999999999998;
+      ];
+      "SagemakerPipelineStack/ml-pipeline-pipeline-resource" [
+        label = " CloudFormation\nCustomResource";
+        fontsize = 12;
+        image = "/Users/ankitpatterson/workspace/sagemaker-pipeline-example/node_modules/cdk-dia/icons/aws/Service/Arch_Management-Governance/64/Arch_AWS-CloudFormation_64@5x.png";
+        imagescale = "true";
+        imagepos = "tc";
+        penwidth = 0;
+        shape = "node";
+        fixedsize = "true";
+        labelloc = "b";
+        width = 1.2;
+        height = 1.682;
+      ];
+      "SagemakerPipelineStack/ml-pipeline-alerts" [
+        label = " ml-pipeline-alerts";
+        fontsize = 12;
+        image = "/Users/ankitpatterson/workspace/sagemaker-pipeline-example/node_modules/cdk-dia/icons/aws/Service/Arch_App-Integration/Arch_64/Arch_AWS-Simple-Notification-Service_64@5x.png";
+        imagescale = "true";
+        imagepos = "tc";
+        penwidth = 0;
+        shape = "node";
+        fixedsize = "true";
+        labelloc = "b";
+        width = 2;
+        height = 2.266;
+      ];
+      "SagemakerPipelineStack/ml-pipeline-pipeline-fail-rule" [
+        label = " ml pipeline pipeline\nfail rule";
+        fontsize = 12;
+        image = "/Users/ankitpatterson/workspace/sagemaker-pipeline-example/node_modules/cdk-dia/icons/aws/Service/Arch_App-Integration/Arch_64/Arch_Amazon-EventBridge_64@5x.png";
+        imagescale = "true";
+        imagepos = "tc";
+        penwidth = 0;
+        shape = "node";
+        fixedsize = "true";
+        labelloc = "b";
+        width = 1.2;
+        height = 1.682;
+      ];
+      "SagemakerPipelineStack/ml-pipeline-seed-provider/framework-onEvent" [
+        label = " framework-onEvent";
+        fontsize = 12;
+        image = "/Users/ankitpatterson/workspace/sagemaker-pipeline-example/node_modules/cdk-dia/icons/aws/Service/Arch_Compute/64/Arch_AWS-Lambda_64@5x.png";
+        imagescale = "true";
+        imagepos = "tc";
+        penwidth = 0;
+        shape = "node";
+        fixedsize = "true";
+        labelloc = "b";
+        width = 2;
+        height = 2.266;
+      ];
+      "SagemakerPipelineStack/ml-pipeline-pipeline-provider/framework-onEvent" [
+        label = " framework-onEvent";
+        fontsize = 12;
+        image = "/Users/ankitpatterson/workspace/sagemaker-pipeline-example/node_modules/cdk-dia/icons/aws/Service/Arch_Compute/64/Arch_AWS-Lambda_64@5x.png";
+        imagescale = "true";
+        imagepos = "tc";
+        penwidth = 0;
+        shape = "node";
+        fixedsize = "true";
+        labelloc = "b";
+        width = 2;
+        height = 2.266;
+      ];
+      subgraph "cluster-SubGraph.ml-pipeline-code-deploy" {
+        graph [
+          label = "ml-pipeline-code-deploy";
+          labelloc = "b";
+          labeljust = "l";
+          margin = 10;
+          fontsize = 16;
+          penwidth = 2;
+          pencolor = "#888888";
+          style = "filled,rounded";
+          fillcolor = "#d6d6d6";
+        ];
+        "SagemakerPipelineStack/ml-pipeline-code-deploy/AwsCliLayer" [
+          label = " AwsCliLayer";
+          fontsize = 12;
+          image = "/Users/ankitpatterson/workspace/sagemaker-pipeline-example/node_modules/cdk-dia/icons/aws/Service/Arch_Compute/64/Arch_AWS-Lambda_64@5x.png";
+          imagescale = "true";
+          imagepos = "tc";
+          penwidth = 0;
+          shape = "node";
+          fixedsize = "true";
+          labelloc = "b";
+          width = 2;
+          height = 2.266;
+        ];
+        "SagemakerPipelineStack/ml-pipeline-code-deploy/CustomResource" [
+          label = " CloudFormation\nCustomResource\nCustomResource";
+          fontsize = 12;
+          image = "/Users/ankitpatterson/workspace/sagemaker-pipeline-example/node_modules/cdk-dia/icons/aws/Service/Arch_Management-Governance/64/Arch_AWS-CloudFormation_64@5x.png";
+          imagescale = "true";
+          imagepos = "tc";
+          penwidth = 0;
+          shape = "node";
+          fixedsize = "true";
+          labelloc = "b";
+          width = 1.2;
+          height = 1.898;
+        ];
+      }
+    }
+  }
+  "SagemakerPipelineStack/ml-pipeline-domain" -> "SagemakerPipelineStack/ml-pipeline-studio-exec-role" [
+    dir = "both";
+  ];
+  "SagemakerPipelineStack/ml-pipeline-user-weirdion" -> "SagemakerPipelineStack/ml-pipeline-domain" [
+    dir = "both";
+  ];
+  "SagemakerPipelineStack/ml-pipeline-pipeline-role" -> "SagemakerPipelineStack/ml-pipeline-sm-job-role" [
+    dir = "both";
+  ];
+  "SagemakerPipelineStack/Custom__CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C" -> "SagemakerPipelineStack/ml-pipeline-code-deploy/AwsCliLayer" [
+    dir = "both";
+  ];
+  "SagemakerPipelineStack/ml-pipeline-pipeline-manager-fn" -> "SagemakerPipelineStack/ml-pipeline-sm-job-role" [
+    dir = "both";
+  ];
+  "SagemakerPipelineStack/ml-pipeline-pipeline-manager-fn" -> "SagemakerPipelineStack/ml-pipeline-pipeline-role" [
+    dir = "both";
+  ];
+  "SagemakerPipelineStack/ml-pipeline-pipeline-fail-rule" -> "SagemakerPipelineStack/ml-pipeline-alerts" [
+    dir = "both";
+  ];
+  "SagemakerPipelineStack/ml-pipeline-seed-provider/framework-onEvent" -> "SagemakerPipelineStack/ml-pipeline-seed-data-fn" [
+    dir = "both";
+  ];
+  "SagemakerPipelineStack/ml-pipeline-seed-provider/framework-onEvent" -> "SagemakerPipelineStack/ml-pipeline-seed-logs" [
+    dir = "both";
+  ];
+  "SagemakerPipelineStack/ml-pipeline-pipeline-provider/framework-onEvent" -> "SagemakerPipelineStack/ml-pipeline-pipeline-manager-fn" [
+    dir = "both";
+  ];
+  "SagemakerPipelineStack/ml-pipeline-pipeline-provider/framework-onEvent" -> "SagemakerPipelineStack/ml-pipeline-pipeline-logs" [
+    dir = "both";
+  ];
+}
