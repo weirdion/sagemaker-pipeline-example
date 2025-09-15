@@ -34,12 +34,15 @@ def on_event(event, context):
     raw_prefix = os.environ.get("RAW_PREFIX", "raw/") or props.get("RawPrefix", "raw/")
     rows = int(props.get("Rows", os.environ.get("ROWS", 200)))
 
+    # Keep PhysicalResourceId stable across Create/Update/Delete
+    physical_id = event.get("PhysicalResourceId") or f"seed-{bucket}-{raw_prefix.rstrip('/')}"
+
     if request_type in ["Create", "Update"]:
         csv_body = build_csv(rows=rows)
         key = raw_prefix.rstrip("/") + "/data.csv"
         put_object(bucket, key, csv_body)
         return {
-            "PhysicalResourceId": f"seed-{bucket}-{key}",
+            "PhysicalResourceId": physical_id,
             "Data": {
                 "S3Uri": f"s3://{bucket}/{key}",
                 "Rows": rows
@@ -53,9 +56,9 @@ def on_event(event, context):
         except Exception:
             pass
         return {
-            "PhysicalResourceId": f"seed-{bucket}-{raw_prefix}",
+            "PhysicalResourceId": physical_id,
             "Data": {}
         }
     else:
         # no-op
-        return {"PhysicalResourceId": "unknown", "Data": {}}
+        return {"PhysicalResourceId": physical_id, "Data": {}}

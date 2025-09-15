@@ -131,14 +131,15 @@ export class SagemakerPipelineStack extends Stack {
     });
     props.dataBucket.grantReadWrite(seedFn);
 
-    const provider = new Provider(this, `${ props.projectPrefix }-seed-provider`, {
-      onEventHandler: seedFn,
-      logGroup: new LogGroup(this, `${ props.projectPrefix }-seed-logs`, {
+    const seedProviderLogs = new LogGroup(this, `${ props.projectPrefix }-seed-logs`, {
         retention: RetentionDays.ONE_WEEK,
         removalPolicy: RemovalPolicy.DESTROY,
-      }),
     });
-    new CustomResource(this, `${ props.projectPrefix }-seed-resource`, {
+    const provider = new Provider(this, `${ props.projectPrefix }-seed-provider`, {
+      onEventHandler: seedFn,
+      logGroup: seedProviderLogs
+    });
+    const seedResource = new CustomResource(this, `${ props.projectPrefix }-seed-resource`, {
       serviceToken: provider.serviceToken,
       properties: {
         Bucket: props.dataBucket.bucketName,
@@ -146,6 +147,8 @@ export class SagemakerPipelineStack extends Stack {
         Rows: 200,
       },
     });
+    // Ensure explicit deletion ordering: delete the custom resource before the provider
+    seedResource.node.addDependency(provider);
 
     // SageMaker Pipeline definition (Processing + Training + Deploy minimal)
     const pipelineName = `ml-pipeline-example-classification`;
@@ -328,12 +331,13 @@ export class SagemakerPipelineStack extends Stack {
       resources: [ pipelineRole.roleArn, sagemakerJobRole.roleArn ],
     }));
 
+    const pipelineProviderLogs = new LogGroup(this, `${ props.projectPrefix }-pipeline-logs`, {
+      retention: RetentionDays.ONE_WEEK,
+      removalPolicy: RemovalPolicy.DESTROY,
+    });
     const pipelineProvider = new Provider(this, `${ props.projectPrefix }-pipeline-provider`, {
       onEventHandler: pipelineFn,
-      logGroup: new LogGroup(this, `${ props.projectPrefix }-pipeline-logs`, {
-        retention: RetentionDays.ONE_WEEK,
-        removalPolicy: RemovalPolicy.DESTROY,
-      }),
+      logGroup: pipelineProviderLogs,
     });
 
     new CustomResource(this, `${ props.projectPrefix }-pipeline-resource`, {
